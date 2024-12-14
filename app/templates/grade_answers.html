@@ -1,0 +1,22 @@
+<!-- templates/grade_answers.html -->
+{% extends 'base.html' %}
+{% block content %}
+<h2>Grade Answers for {{ lesson.title }}</h2>
+{% if answers %}
+    {% for answer in answers %}
+        <div class="answer">
+            <p><strong>Student:</strong> {{ answer.student.firstName }}</p>
+            <p><strong>Question:</strong> {{ answer.question.prompt }}</p>
+            <p><strong>Answer:</strong> {{ answer.content }}</p>
+            {% if answer.grade is not none %}
+                <p><strong>Grade:</strong> {{ answer.grade }}</p>
+            {% else %}
+                <a href="{{ url_for('routes.grade_answer', answer_id=answer.id) }}" class="btn btn-primary">Grade</a>
+            {% endif %}
+        </div>
+        <hr>
+    {% endfor %}
+{% else %}
+    <p>No answers to grade yet.</p>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block title %}Courses - Mathnet{% endblock %}
+
+{% block content %}
+<h2>Available Courses</h2>
+<ul>
+    {% for course in courses %}
+    <li>{{ course.title }}</li>
+    {% endfor %}
+</ul>
+{% endblock %}

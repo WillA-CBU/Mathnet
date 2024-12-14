@@ -1,0 +1,35 @@
+<!-- templates/student_course_grades.html -->
+{% extends 'base.html' %}
+{% block content %}
+<h2>My Grades for {{ course.title }}</h2>
+
+{% if answers %}
+    <p><strong>Average Grade:</strong> {{ '%.2f' % average_grade }}</p>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Lesson</th>
+                <th>Question</th>
+                <th>Your Answer</th>
+                <th>Grade</th>
+                <th>Feedback</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for answer in answers %}
+                <tr>
+                    <td>{{ answer.question.lesson.title }}</td>
+                    <td>{{ answer.question.prompt }}</td>
+                    <td>{{ answer.content }}</td>
+                    <td>{{ answer.grade }}</td>
+                    <td>{{ answer.feedback }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>You don't have any graded answers in this course yet.</p>
+{% endif %}
+
+<a href="{{ url_for('routes.course', course_id=course.id) }}" class="btn btn-secondary">Back to Course</a>
+{% endblock %}

@@ -1,0 +1,72 @@
+<!-- templates/teacher_course_grades.html -->
+{% extends 'base.html' %}
+{% block content %}
+<h2>Grades for {{ course.title }}</h2>
+
+{% if student_grades %}
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Student</th>
+                <th>Average Grade</th>
+                <th>Details</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in student_grades %}
+                <tr>
+                    <td>{{ item.student.firstName }}</td>
+                    <td>
+                        {% if item.average_grade %}
+                            {{ '%.2f' % item.average_grade }}
+                        {% else %}
+                            N/A
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if item.answers %}
+                            <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#student-{{ item.student.id }}">
+                                View Answers
+                            </button>
+                        {% else %}
+                            No graded answers
+                        {% endif %}
+                    </td>
+                </tr>
+                {% if item.answers %}
+                    <tr class="collapse" id="student-{{ item.student.id }}">
+                        <td colspan="3">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Lesson</th>
+                                        <th>Question</th>
+                                        <th>Answer</th>
+                                        <th>Grade</th>
+                                        <th>Feedback</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for answer in item.answers %}
+                                        <tr>
+                                            <td>{{ answer.question.lesson.title }}</td>
+                                            <td>{{ answer.question.prompt }}</td>
+                                            <td>{{ answer.content }}</td>
+                                            <td>{{ answer.grade }}</td>
+                                            <td>{{ answer.feedback }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                {% endif %}
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>No students have submitted answers in this course yet.</p>
+{% endif %}
+
+<a href="{{ url_for('routes.course', course_id=course.id) }}" class="btn btn-secondary">Back to Course</a>
+{% endblock %}

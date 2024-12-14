@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}Home - Mathnet{% endblock %}
+
+{% block content %}
+<h2 align="center">Your Courses</h2>
+
+<!-- Courses Created by User -->
+<h3>Your Created Courses</h3>
+{% if created_courses %}
+<ul class="list-group list-group-flush" id="created_courses">
+    {% for course in created_courses %}
+    <li class="list-group-item">
+        <a href="{{ url_for('routes.course', course_id=course.id) }}">{{ course.title }}</a>
+    </li>
+    {% endfor %}
+</ul>
+{% else %}
+<p>You haven't created any courses yet.</p>
+{% endif %}
+
+<!-- Courses Joined by User -->
+<h3>Courses You've Joined</h3>
+{% if joined_courses %}
+<ul class="list-group list-group-flush" id="joined_courses">
+    {% for course in joined_courses %}
+    <li class="list-group-item">
+        <a href="{{ url_for('routes.course', course_id=course.id) }}">{{ course.title }}</a>
+    </li>
+    {% endfor %}
+</ul>
+{% else %}
+<p>You haven't joined any courses yet.</p>
+{% endif %}
+
+<div class="mt-4">
+    <a href="{{ url_for('routes.create_course') }}" class="btn btn-primary">Create Course</a>
+    <a href="{{ url_for('routes.join_course') }}" class="btn btn-secondary">Join Course</a>
+</div>
+{% endblock %}

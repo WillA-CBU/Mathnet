@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Edit Lesson - {{ lesson.title }}</h2>
+<form method="POST" action="{{ url_for('routes.edit_lesson', lesson_id=lesson.id) }}">
+  
+  <div class="form-group">
+    <label for="title">Lesson Title</label>
+    <input type="text" name="title" class="form-control" value="{{ lesson.title }}" required>
+  </div>
+  
+  <div class="form-group">
+    <label for="video_url">YouTube Video URL</label>
+    <input type="url" name="video_url" class="form-control" value="{{ lesson.video_url }}">
+  </div>
+  
+  <div class="form-group">
+    <label for="content">Content</label>
+    <textarea id="content-editor" name="content" class="form-control">{{ lesson.content }}</textarea>
+  </div>
+  
+  <!-- Button to Add/Edit Desmos Graph -->
+  <button type="button" class="btn btn-secondary" id="add-desmos-btn">{{ 'Edit Desmos Graph' if lesson.desmos_state else 'Add Desmos Graph' }}</button>
+  
+  <!-- Container for Desmos Calculator -->
+  <div id="desmos-container" style="width: 100%; height: 500px; {{ 'display: block;' if lesson.desmos_state else 'display: none;' }} margin-top: 20px;"></div>
+  
+  <!-- Hidden input to store Desmos graph state -->
+  <input type="hidden" name="desmos_state" id="desmos_state" value="{{ lesson.desmos_state|escape }}">
+  
+  <button type="submit" class="btn btn-primary">Save Changes</button>
+</form>
+
+<!-- Include TinyMCE and Desmos scripts -->
+
+<!-- Include TinyMCE -->
+<script src="https://cdn.tiny.cloud/1/clbmong8mftjglyynaj1qdo2p9clpr7gxqglhs7utt7fcxed/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
+<!-- Initialize TinyMCE -->
+<script>
+  tinymce.init({
+    selector: 'textarea#content-editor',
+    plugins: 'lists link image table code fullscreen mathjax',
+    toolbar: 'undo redo | bold italic underline | ' +
+             'alignleft aligncenter alignright | ' +
+             'bullist numlist outdent indent | link image table | ' +
+             'mathjax code fullscreen',
+    menubar: false,
+    height: 500,
+    mathjax: {
+      lib: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js'
+    }
+  });
+</script>
+
+<!-- Include Desmos API -->
+<script src="https://www.desmos.com/api/v1.10/calculator.js?apiKey=dcb31709b452b1cf9dc26972add0fda6"></script>
+
+<!-- Desmos Graph Script -->
+<script>
+  var desmosCalculator;
+  var desmosState = {{ lesson.desmos_state|tojson }};
+  var container = document.getElementById('desmos-container');
+
+  // Initialize the calculator if the state exists
+  if (container.style.display === 'block') {
+    desmosCalculator = Desmos.GraphingCalculator(container, { expressions: true });
+    if (desmosState) {
+      desmosCalculator.setState(desmosState);
+    }
+  }
+
+  document.getElementById('add-desmos-btn').addEventListener('click', function() {
+    if (container.style.display === 'none') {
+      container.style.display = 'block';
+      if (!desmosCalculator) {
+        desmosCalculator = Desmos.GraphingCalculator(container, { expressions: true });
+        if (desmosState) {
+          desmosCalculator.setState(desmosState);
+        }
+      }
+    }
+  });
+
+  // Save the Desmos state when the form is submitted
+  document.querySelector('form').addEventListener('submit', function() {
+    if (desmosCalculator) {
+      var state = desmosCalculator.getState();
+      document.getElementById('desmos_state').value = JSON.stringify(state);
+    }
+  });
+</script>
+{% endblock %}

@@ -1,0 +1,31 @@
+<!-- templates/my_grades.html -->
+{% extends 'base.html' %}
+{% block content %}
+<h2>My Grades</h2>
+{% if answers %}
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Course</th>
+                <th>Lesson</th>
+                <th>Question</th>
+                <th>Grade</th>
+                <th>Feedback</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for answer in answers %}
+                <tr>
+                    <td>{{ answer.question.lesson.course.title }}</td>
+                    <td>{{ answer.question.lesson.title }}</td>
+                    <td>{{ answer.question.prompt }}</td>
+                    <td>{{ answer.grade }}</td>
+                    <td>{{ answer.feedback }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>You don't have any graded answers yet.</p>
+{% endif %}
+{% endblock %}

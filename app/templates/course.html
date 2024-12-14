@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+
+{% block title %}{{ course.title }} - Mathnet{% endblock %}
+
+{% block content %}
+<h2>{{ course.title }}</h2>
+<p>{{ course.description }}</p>
+
+<!-- Tab Navigation -->
+<ul class="nav nav-tabs" id="courseTabs" role="tablist">
+  <li class="nav-item">
+    <a class="nav-link active" id="overview-tab" data-toggle="tab" href="#overview" role="tab">Overview</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" id="participants-tab" data-toggle="tab" href="#participants" role="tab">Participants</a>
+  </li>
+</ul>
+
+<!-- Tab Content -->
+<div class="tab-content" id="courseTabsContent">
+  <!-- Overview Tab -->
+  <div class="tab-pane fade show active" id="overview" role="tabpanel">
+    <h3>Lessons</h3>
+    <ul>
+      {% for lesson in course.lessons %}
+      <li>
+        <a href="{{ url_for('routes.view_lesson', lesson_id=lesson.id) }}">{{ lesson.title }}</a>
+        {% if current_user == course.creator %}
+        <a href="{{ url_for('routes.edit_lesson', lesson_id=lesson.id) }}" class="btn btn-sm btn-secondary">Edit</a>
+        {% else %}
+          {% if lesson.id in completed_lessons_ids %}
+            <span class="badge badge-success">Completed</span>
+          {% else %}
+            <span class="badge badge-secondary">Not Completed</span>
+          {% endif %}
+        {% endif %}
+      </li>
+      {% endfor %}
+    </ul>
+    {% if current_user == course.creator %}
+    <a href="{{ url_for('routes.add_lesson', course_id=course.id) }}" class="btn btn-primary">Add Lesson</a>
+    {% endif %}
+    {% if user == course.creator %}
+    <!-- Course Code Display -->
+    <div class="mt-3">
+        <label for="courseCode"><strong>Course Code:</strong></label>
+        <div class="input-group">
+          <input type="text" class="form-control" id="courseCode" value="{{ course.code }}" readonly>
+        </div>
+      </div>
+      <!-- Delete Course Button -->
+      <button type="button" class="btn btn-danger" onClick="deleteCourse({{ course.id }})">
+        Delete Course
+      </button>
+      <!-- Toggle Privacy Button -->
+      <form method="POST" action="{{ url_for('routes.toggle_course_privacy', course_id=course.id) }}" style="display:inline;">
+        {% if course.is_private %}
+          <button type="submit" class="btn btn-secondary">Make Public</button>
+        {% else %}
+          <button type="submit" class="btn btn-secondary">Make Private</button>
+        {% endif %}
+      </form>
+    {% endif %}
+
+    <!-- For Students -->
+    {% if current_user in course.students %}
+        <a href="{{ url_for('routes.my_course_grades', course_id=course.id) }}" class="btn btn-primary">View My Grades</a>
+    {% endif %}
+
+    <!-- For Teachers (Course Creator) -->
+    {% if current_user.id == course.creator_id %}
+        <a href="{{ url_for('routes.course_grades', course_id=course.id) }}" class="btn btn-primary">View Student Grades</a>
+    {% endif %}
+    
+  </div>
+
+  <!-- Participants Tab -->
+  <div class="tab-pane fade" id="participants" role="tabpanel">
+    <h3>Teacher</h3>
+    <p>{{ course.creator.firstName }}</p>
+
+    <h3>Students</h3>
+    {% if course.students %}
+    <ul class="list-group">
+      {% for student in course.students %}
+      <li class="list-group-item d-flex justify-content-between align-items-center">
+        {{ student.firstName }}
+        {% if user == course.creator %}
+        <!-- Remove Student Button -->
+        <form method="POST" action="{{ url_for('routes.remove_student', course_id=course.id) }}" style="display:inline;">
+          <input type="hidden" name="student_id" value="{{ student.id }}">
+          <button type="submit" class="btn btn-danger btn-sm">Remove</button>
+        </form>
+        {% endif %}
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <p>No students enrolled.</p>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

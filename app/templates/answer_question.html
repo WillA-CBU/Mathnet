@@ -1,0 +1,13 @@
+<!-- templates/answer_question.html -->
+{% extends 'base.html' %}
+{% block content %}
+<h2>Answer Question</h2>
+<p>{{ question.prompt }}</p>
+<form method="POST">
+    <div class="form-group">
+        <label for="content">Your Answer:</label>
+        <textarea name="content" class="form-control" required>{{ existing_answer.content if existing_answer else '' }}</textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">Submit Answer</button>
+</form>
+{% endblock %}

@@ -1,0 +1,12 @@
+<!-- templates/add_question.html -->
+{% extends 'base.html' %}
+{% block content %}
+<h2>Add Question to {{ lesson.title }}</h2>
+<form method="POST">
+    <div class="form-group">
+        <label for="prompt">Question Prompt:</label>
+        <textarea name="prompt" class="form-control" required></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">Add Question</button>
+</form>
+{% endblock %}
