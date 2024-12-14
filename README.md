@@ -6,6 +6,7 @@ Website Developed for Web Application Development
 This web application is a learning platform that allows teachers to create courses and lessons, and students to enroll in courses, complete lessons, answer questions, and track their progress. Teachers can grade student answers and view student performance within each course.
 
 ### Features
+(Not all encompassing of my 15 features for final submission)
 
 User Authentication: Secure sign-up and login functionality using Flask-Login.
 
