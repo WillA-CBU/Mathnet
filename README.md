@@ -1,27 +1,27 @@
 # Mathnet
 Website Developed for Web Application Development
 
-Overview
+### Overview
 
 This web application is a learning platform that allows teachers to create courses and lessons, and students to enroll in courses, complete lessons, answer questions, and track their progress. Teachers can grade student answers and view student performance within each course.
 
-Features
+### Features
 
 User Authentication: Secure sign-up and login functionality using Flask-Login.
 
-Course Management:
+#### Course Management:
 
 Teachers can create courses with unique codes.
 
 Courses can be public or private.
 
-Lesson Management:
+#### Lesson Management:
 
 Teachers can add, edit, and delete lessons.
 
 Lessons can include content, embedded videos, and Desmos graphs, and LaTeX markup langauge.
 
-Question and Answer System:
+#### Question and Answer System:
 
 Teachers can add questions to lessons.
 
@@ -29,23 +29,27 @@ Students can submit answers to questions.
 
 Teachers can grade answers and provide feedback.
 
-Progress Tracking:
+#### Progress Tracking:
 
 Students can mark lessons as completed.
 
 Indicators show which lessons have been completed.
 
-Grade Viewing:
+#### Grade Viewing:
 
 Students can view their grades within each course.
 
 Teachers can view grades for all students in their courses.
 
 
-Technology Stack
+### Technology Stack
 
 Backend: Python, Flask, SQLAlchemy
 
 Frontend: HTML, CSS (Bootstrap), JavaScript
 
 Database: SQLite (development), can be configured for PostgreSQL or MySQL for production
+
+### Note
+You may need to ensure flask is properly installed in a Virtual environment to get it to work. I was unnable to upload the venv folder.
+
